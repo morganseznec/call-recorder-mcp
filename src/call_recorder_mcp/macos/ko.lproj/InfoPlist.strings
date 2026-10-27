@@ -1,0 +1,3 @@
+/* Permission prompts shown by macOS, in Korean. */
+"NSMicrophoneUsageDescription" = "CallRecorder는 통화 중 사용자의 음성을 녹음하여 텍스트로 변환합니다.";
+"NSAudioCaptureUsageDescription" = "CallRecorder는 통화 오디오(WhatsApp, Teams, 브라우저)를 녹음하여 텍스트로 변환합니다.";

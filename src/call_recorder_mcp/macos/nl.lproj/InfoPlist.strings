@@ -1,0 +1,3 @@
+/* Permission prompts shown by macOS, in Dutch. */
+"NSMicrophoneUsageDescription" = "CallRecorder neemt je stem op tijdens een gesprek om deze te transcriberen.";
+"NSAudioCaptureUsageDescription" = "CallRecorder neemt de audio van het gesprek op (WhatsApp, Teams, browser) om deze te transcriberen.";

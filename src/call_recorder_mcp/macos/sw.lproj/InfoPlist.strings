@@ -1,0 +1,3 @@
+/* Permission prompts shown by macOS, in Swahili. */
+"NSMicrophoneUsageDescription" = "CallRecorder hurekodi sauti yako wakati wa simu ili kuinukuu.";
+"NSAudioCaptureUsageDescription" = "CallRecorder hurekodi sauti ya simu (WhatsApp, Teams, kivinjari) ili kuinukuu.";

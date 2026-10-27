@@ -1,0 +1,3 @@
+/* Permission prompts shown by macOS, in Vietnamese. */
+"NSMicrophoneUsageDescription" = "CallRecorder ghi lại giọng nói của bạn trong cuộc gọi để chép lời.";
+"NSAudioCaptureUsageDescription" = "CallRecorder ghi lại âm thanh cuộc gọi (WhatsApp, Teams, trình duyệt) để chép lời.";

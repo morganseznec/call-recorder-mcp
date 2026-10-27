@@ -1,0 +1,3 @@
+/* Permission prompts shown by macOS, in Traditional Chinese. */
+"NSMicrophoneUsageDescription" = "CallRecorder 會在通話期間錄製你的聲音以進行轉錄。";
+"NSAudioCaptureUsageDescription" = "CallRecorder 會錄製通話音訊（WhatsApp、Teams、瀏覽器）以進行轉錄。";

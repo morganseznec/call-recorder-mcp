@@ -4,6 +4,22 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-10-27
+
+20 languages instead of 2.
+
+### Added
+
+- **18 more interface languages**: Arabic, Chinese (Simplified and Traditional), Dutch, German, Hindi, Indonesian, Italian, Japanese, Korean, Portuguese (Brazil and Portugal), Russian, Spanish, Swahili, Thai, Turkish and Vietnamese, on top of English and French. Tool replies, transcript headings and speaker labels follow the language, with its own typography (full-width colon in Chinese and Japanese, space before the colon in French).
+- **Permission prompts in the 20 languages** (one `.lproj` per language in the helper app). Run `call-recorder-setup` again to rebuild it.
+
+### Changed
+
+- **The language now comes from the Mac's preferred language** (`AppleLanguages`) instead of the region format (`AppleLocale`), so a Mac in English with a French region gets English. Chinese is told apart by script or region (`zh-Hant`, `zh-TW`, `zh-HK` give Traditional), Portuguese by region (`pt-PT` gives European Portuguese, anything else Brazilian).
+- `CALL_RECORDER_LOCALE` accepts any of the 20 codes, in BCP 47 or POSIX form (`pt-PT`, `zh_TW`...).
+- Messages moved from Python to one JSON catalog per language (`locales/`). Tests check that every catalog has the same messages and placeholders as English.
+- The hallucination filter recognizes Whisper echoing the vocabulary prompt in every language.
+
 ## [1.1.0] - 2026-10-27
 
 English and French, instead of French only.
@@ -39,5 +55,6 @@ First public release.
 - Filters for common Whisper hallucinations on silence and noise (subtitle credits).
 - Test suite (unit tests and a JSON-RPC stdio roundtrip) and CI.
 
+[1.2.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.2.0
 [1.1.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.1.0
 [1.0.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.0.0

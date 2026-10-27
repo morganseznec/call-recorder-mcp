@@ -14,7 +14,7 @@ Nothing leaves your Mac: capture, transcription and speaker separation all run l
 - **Custom vocabulary** so product, company and people names are spelled right.
 - **Works with existing files** too: WhatsApp voice notes, meeting recordings, any audio or video format ffmpeg reads.
 - A **mixed `conversation.wav`** of each call, to listen to.
-- **English and French**: tool replies, transcript labels ("Me" / "Moi", "Speaker 1" / "Interlocuteur 1"...) and the macOS permission prompts follow your Mac's language, and transcription defaults to it. Set `CALL_RECORDER_LOCALE` to choose. Transcription itself works in any language Whisper supports.
+- **20 languages**: tool replies, transcript labels ("Me", "Speaker 1"...) and the macOS permission prompts follow your Mac's language, and transcription defaults to it: Arabic, Chinese (Simplified and Traditional), Dutch, English, French, German, Hindi, Indonesian, Italian, Japanese, Korean, Portuguese (Brazil and Portugal), Russian, Spanish, Swahili, Thai, Turkish and Vietnamese. Set `CALL_RECORDER_LOCALE` to choose. Transcription itself works in any language Whisper supports.
 
 ## Requirements
 
@@ -68,7 +68,7 @@ You never call the tools yourself: talk to Claude and it picks them.
 | "Transcribe the last call again, in Spanish" | `transcribe_recording(language="es")` |
 | "Is it recording properly?" | `recording_status()` shows live levels for both sides |
 
-It works the same in French ("Enregistre mon appel WhatsApp", "C'est fini, transcris").
+It works the same in any language: "Enregistre mon appel WhatsApp", "Graba mi llamada de WhatsApp"...
 
 A transcript looks like this:
 
@@ -128,8 +128,8 @@ All optional, set with `-e NAME=value` in `claude mcp add`:
 | Variable | Default | Purpose |
 |---|---|---|
 | `CALL_RECORDER_DIR` | `~/CallRecordings` | Where recordings and transcripts go |
-| `CALL_RECORDER_LOCALE` | your Mac's language | Language of replies and transcript labels: `en` or `fr` (others fall back to English) |
-| `CALL_RECORDER_LANGUAGE` | same as the locale | Default transcription language (`en`, `fr`, `auto`...) |
+| `CALL_RECORDER_LOCALE` | your Mac's language | Language of replies and transcript labels: `ar`, `de`, `en`, `es`, `fr`, `hi`, `id`, `it`, `ja`, `ko`, `nl`, `pt-BR`, `pt-PT`, `ru`, `sw`, `th`, `tr`, `vi`, `zh-Hans`, `zh-Hant` (others fall back to English) |
+| `CALL_RECORDER_LANGUAGE` | same as the locale | Default transcription language, as a Whisper code (`en`, `fr`, `zh`, `auto`...) |
 | `CALL_RECORDER_VOCABULARY` | `<home>/vocabulary.txt` | Vocabulary file |
 | `CALL_RECORDER_HOME` | `~/Library/Application Support/call-recorder-mcp` | Helper app, models, vocabulary |
 | `CALL_RECORDER_WHISPER_MODEL` | `<home>/models/ggml-large-v3-turbo-q5_0.bin` | Any whisper.cpp model |

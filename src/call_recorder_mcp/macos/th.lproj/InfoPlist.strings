@@ -1,0 +1,3 @@
+/* Permission prompts shown by macOS, in Thai. */
+"NSMicrophoneUsageDescription" = "CallRecorder บันทึกเสียงของคุณระหว่างการโทรเพื่อถอดเป็นข้อความ";
+"NSAudioCaptureUsageDescription" = "CallRecorder บันทึกเสียงการโทร (WhatsApp, Teams, เบราว์เซอร์) เพื่อถอดเป็นข้อความ";

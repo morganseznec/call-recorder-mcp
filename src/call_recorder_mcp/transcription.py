@@ -9,6 +9,7 @@ prompt is given, which blurs who said what.
 """
 
 import difflib
+import functools
 import json
 import os
 import re
@@ -18,21 +19,31 @@ from pathlib import Path
 from typing import Any, TypedDict
 
 from . import audio, config, diarization, storage
+from .i18n import all_translations, t
 from .i18n import language as language_default
-from .i18n import t
 from .spans import Span, group_utterances
 
 # Recorded tracks; "audio" is an imported file.
 TRACKS = ("mic", "remote", "audio")
 SILENT_TRACK_DB = -55.0
 
-# Whisper "hears" these on silence or noise (subtitle credits mostly), or echoes its prompt.
-HALLUCINATIONS = re.compile(
+# Whisper "hears" these on silence or noise (subtitle credits mostly).
+NOISE = (
     r"amara\.org|sous-titr|merci d'avoir regard|abonnez-vous|^\W*(merci|thank you)\W*$|"
-    r"radio-canada|transcrit par|thanks? (you )?for watching|subtitles by|^\W*(vocabulaire|glossary)\s*:|"
-    r"^\W*\[?(musique|music|rires|silence|applaudissements)\]?\W*$",
-    re.IGNORECASE,
+    r"radio-canada|transcrit par|thanks? (you )?for watching|subtitles by|"
+    r"^\W*\[?(musique|music|rires|silence|applaudissements)\]?\W*$"
 )
+
+
+@functools.cache
+def _hallucinations() -> re.Pattern[str]:
+    # Whisper also echoes the start of its prompt ("Glossary:", "Vocabulaire:"... in any language).
+    prefixes = "|".join(re.escape(word) for word in sorted(all_translations("glossary")))
+    return re.compile(f"{NOISE}|^\\W*({prefixes})\\s*[:：]", re.IGNORECASE)
+
+
+def is_hallucination(text: str) -> bool:
+    return bool(_hallucinations().search(text))
 
 
 class Segment(TypedDict):
@@ -107,7 +118,7 @@ def transcribe_track(wav: Path, language: str, workdir: Path, speakers: int = 1)
         for span, (_, offset), items in zip(spans, chunks, results, strict=True):
             for item in items:
                 text = item.get("text", "").strip()
-                if text and not HALLUCINATIONS.search(text):
+                if text and not is_hallucination(text):
                     start = round(offset + item["offsets"]["from"] / 1000, 2)
                     end = round(offset + item["offsets"]["to"] / 1000, 2)
                     segments.append((Span(start, end, span.voice), text))

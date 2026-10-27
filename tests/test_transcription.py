@@ -22,12 +22,12 @@ def segment(start, end, text, speaker="Moi"):
     ],
 )
 def test_known_hallucinations_are_filtered(text):
-    assert transcription.HALLUCINATIONS.search(text)
+    assert transcription.is_hallucination(text)
 
 
 @pytest.mark.parametrize("text", ["Merci pour ton retour, on avance.", "On publie la version iOS jeudi."])
 def test_real_speech_is_kept(text):
-    assert not transcription.HALLUCINATIONS.search(text)
+    assert not transcription.is_hallucination(text)
 
 
 def test_vocabulary_prompt_skips_comments_and_blank_lines(tmp_path):

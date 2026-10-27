@@ -1,0 +1,3 @@
+/* Permission prompts shown by macOS, in Italian. */
+"NSMicrophoneUsageDescription" = "CallRecorder registra la tua voce durante una chiamata per trascriverla.";
+"NSAudioCaptureUsageDescription" = "CallRecorder registra l'audio della chiamata (WhatsApp, Teams, browser) per trascriverlo.";
