@@ -1,0 +1,39 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Lint
+        run: |
+          uv run --python ${{ matrix.python-version }} --extra dev ruff check .
+          uv run --python ${{ matrix.python-version }} --extra dev ruff format --check .
+
+      - name: Run pytest
+        run: uv run --python ${{ matrix.python-version }} --extra dev pytest -v
+
+  swift:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the capture helper
+        run: swiftc -O -swift-version 5 -o CallRecorder src/call_recorder_mcp/macos/main.swift

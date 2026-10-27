@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+
+# distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# environments
+.venv/
+.python-version
+
+# uv
+uv.lock
+
+# tools
+.pytest_cache/
+.ruff_cache/
+
+# editors
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# local data: recordings and a personal vocabulary never belong in the repo
+*.wav
+vocabulary.txt

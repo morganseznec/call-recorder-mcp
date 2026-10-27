@@ -1,0 +1,16 @@
+# Words Whisper should spell correctly: one term per line, # for comments.
+# Passed to whisper.cpp as a prompt for each utterance.
+#
+# Only list words people actually say: Whisper tends to insert listed
+# names where it hears something close. Add your own (company, product
+# and people names) below.
+
+iOS
+Android
+TestFlight
+App Store
+back-end
+front-end
+API
+endpoint
+merge
