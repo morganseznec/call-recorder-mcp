@@ -4,6 +4,22 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-10-27
+
+Live transcription, so Claude can help during the call.
+
+### Added
+
+- **`start_recording(live=true)`** also transcribes the call as it goes. A detached worker reads both tracks while CallRecorder writes them, cuts each side into sentences with a streaming Silero VAD (sherpa-onnx) and sends each sentence to a `whisper-server` that keeps the model in memory. Each sentence is available about 1 second after it ends.
+- **`get_live_transcript(since, wait_seconds)`**: what was said since a cursor, waiting for new speech. Its description tells Claude how to coach the user in a loop: which planned questions are answered, which answers are vague or evasive, which follow-up questions to ask now.
+- Each live sentence keeps 0.3 s of audio from before its start, so the first word is not clipped.
+- The mic echo of the other side is dropped live too.
+- `call-recorder-setup` downloads the streaming VAD model (`silero_vad.onnx`, 0.6 MB) and checks for `whisper-server`.
+
+### Changed
+
+- The README no longer says that nothing leaves the Mac: audio stays local, but the transcript text goes to Claude when it reads it (continuously in live mode).
+
 ## [1.2.0] - 2026-10-27
 
 20 languages instead of 2.
@@ -55,6 +71,7 @@ First public release.
 - Filters for common Whisper hallucinations on silence and noise (subtitle credits).
 - Test suite (unit tests and a JSON-RPC stdio roundtrip) and CI.
 
+[1.3.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.3.0
 [1.2.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.2.0
 [1.1.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.1.0
 [1.0.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.0.0

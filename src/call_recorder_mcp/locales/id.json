@@ -59,5 +59,11 @@
   "sources_output": "Output: {device}",
   "sources_apps": "App audio:",
   "sources_playing": ": sedang memutar audio",
-  "sources_shortcuts": "Pintasan sumber: {sources}"
+  "sources_shortcuts": "Pintasan sumber: {sources}",
+  "live_on": "transkripsi langsung aktif",
+  "live_off": "Transkripsi langsung tidak aktif untuk rekaman ini (mulai rekaman dengan live=true).",
+  "live_nothing_new": "Belum ada hal baru yang diucapkan.",
+  "live_next": "Panggilan berikutnya: since={cursor}.",
+  "live_ended": "Rekaman sudah selesai.",
+  "live_failed": "Transkripsi langsung berhenti: {error}"
 }

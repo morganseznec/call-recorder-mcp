@@ -59,5 +59,11 @@
   "sources_output": "الإخراج: {device}",
   "sources_apps": "تطبيقات الصوت:",
   "sources_playing": ": يشغّل صوتًا",
-  "sources_shortcuts": "اختصارات المصادر: {sources}"
+  "sources_shortcuts": "اختصارات المصادر: {sources}",
+  "live_on": "التفريغ النصي المباشر مُفعَّل",
+  "live_off": "التفريغ النصي المباشر غير مُفعَّل لهذا التسجيل (ابدأ التسجيل باستخدام live=true).",
+  "live_nothing_new": "لم يُقَل شيء جديد بعد.",
+  "live_next": "الاستدعاء التالي: since={cursor}.",
+  "live_ended": "انتهى التسجيل.",
+  "live_failed": "توقف التفريغ النصي المباشر: {error}"
 }

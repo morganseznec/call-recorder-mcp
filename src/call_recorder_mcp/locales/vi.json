@@ -59,5 +59,11 @@
   "sources_output": "Đầu ra: {device}",
   "sources_apps": "Ứng dụng âm thanh:",
   "sources_playing": ": đang phát",
-  "sources_shortcuts": "Lối tắt nguồn: {sources}"
+  "sources_shortcuts": "Lối tắt nguồn: {sources}",
+  "live_on": "chép lời trực tiếp đang bật",
+  "live_off": "Chép lời trực tiếp chưa được bật cho bản ghi này (hãy bắt đầu ghi với live=true).",
+  "live_nothing_new": "Chưa có nội dung mới nào được nói.",
+  "live_next": "Lần gọi tiếp theo: since={cursor}.",
+  "live_ended": "Bản ghi đã kết thúc.",
+  "live_failed": "Chép lời trực tiếp đã dừng: {error}"
 }

@@ -59,5 +59,11 @@
   "sources_output": "Output: {device}",
   "sources_apps": "Audio apps:",
   "sources_playing": ": playing",
-  "sources_shortcuts": "Source shortcuts: {sources}"
+  "sources_shortcuts": "Source shortcuts: {sources}",
+  "live_on": "live transcription on",
+  "live_off": "Live transcription is not on for this recording (start the recording with live=true).",
+  "live_nothing_new": "Nothing new has been said yet.",
+  "live_next": "Next call: since={cursor}.",
+  "live_ended": "The recording is over.",
+  "live_failed": "Live transcription stopped: {error}"
 }

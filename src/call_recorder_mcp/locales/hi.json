@@ -59,5 +59,11 @@
   "sources_output": "आउटपुट: {device}",
   "sources_apps": "ऑडियो ऐप्स:",
   "sources_playing": ": ऑडियो चल रहा है",
-  "sources_shortcuts": "स्रोत शॉर्टकट: {sources}"
+  "sources_shortcuts": "स्रोत शॉर्टकट: {sources}",
+  "live_on": "लाइव ट्रांसक्रिप्शन चालू",
+  "live_off": "इस रिकॉर्डिंग के लिए लाइव ट्रांसक्रिप्शन चालू नहीं है (रिकॉर्डिंग को live=true के साथ शुरू करें)।",
+  "live_nothing_new": "अभी तक कुछ नया नहीं कहा गया है।",
+  "live_next": "अगली कॉल: since={cursor}।",
+  "live_ended": "रिकॉर्डिंग समाप्त हो गई है।",
+  "live_failed": "लाइव ट्रांसक्रिप्शन रुक गया: {error}"
 }

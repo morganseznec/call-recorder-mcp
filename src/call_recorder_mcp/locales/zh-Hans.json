@@ -59,5 +59,11 @@
   "sources_output": "输出：{device}",
   "sources_apps": "音频 App：",
   "sources_playing": "：正在播放",
-  "sources_shortcuts": "来源简称：{sources}"
+  "sources_shortcuts": "来源简称：{sources}",
+  "live_on": "实时转录已开启",
+  "live_off": "此录音未开启实时转录（请使用 live=true 开始录音）。",
+  "live_nothing_new": "目前还没有新的内容。",
+  "live_next": "下次调用：since={cursor}。",
+  "live_ended": "录音已结束。",
+  "live_failed": "实时转录已停止：{error}"
 }

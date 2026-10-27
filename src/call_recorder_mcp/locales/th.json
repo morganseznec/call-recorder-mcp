@@ -59,5 +59,11 @@
   "sources_output": "เอาต์พุต: {device}",
   "sources_apps": "แอปเสียง:",
   "sources_playing": ": กำลังเล่นเสียง",
-  "sources_shortcuts": "ทางลัดแหล่งที่มา: {sources}"
+  "sources_shortcuts": "ทางลัดแหล่งที่มา: {sources}",
+  "live_on": "ถอดเสียงสดเปิดอยู่",
+  "live_off": "การถอดเสียงสดไม่ได้เปิดสำหรับการบันทึกนี้ (เริ่มการบันทึกด้วย live=true)",
+  "live_nothing_new": "ยังไม่มีการพูดอะไรใหม่",
+  "live_next": "การเรียกครั้งถัดไป: since={cursor}",
+  "live_ended": "การบันทึกสิ้นสุดแล้ว",
+  "live_failed": "การถอดเสียงสดหยุดทำงาน: {error}"
 }

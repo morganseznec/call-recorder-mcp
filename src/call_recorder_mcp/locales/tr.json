@@ -59,5 +59,11 @@
   "sources_output": "Çıkış: {device}",
   "sources_apps": "Ses uygulamaları:",
   "sources_playing": ": ses çalıyor",
-  "sources_shortcuts": "Kaynak kısayolları: {sources}"
+  "sources_shortcuts": "Kaynak kısayolları: {sources}",
+  "live_on": "canlı yazıya dökme açık",
+  "live_off": "Bu kayıt için canlı yazıya dökme açık değil (kaydı live=true ile başlatın).",
+  "live_nothing_new": "Henüz yeni bir şey söylenmedi.",
+  "live_next": "Sonraki çağrı: since={cursor}.",
+  "live_ended": "Kayıt sona erdi.",
+  "live_failed": "Canlı yazıya dökme durdu: {error}"
 }

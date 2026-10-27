@@ -59,5 +59,11 @@
   "sources_output": "出力：{device}",
   "sources_apps": "オーディオアプリ：",
   "sources_playing": "：再生中",
-  "sources_shortcuts": "ソースのショートカット：{sources}"
+  "sources_shortcuts": "ソースのショートカット：{sources}",
+  "live_on": "ライブ文字起こし有効",
+  "live_off": "この録音ではライブ文字起こしが有効になっていません（live=true で録音を開始してください）。",
+  "live_nothing_new": "まだ新しい発言はありません。",
+  "live_next": "次回の呼び出し：since={cursor}。",
+  "live_ended": "録音は終了しました。",
+  "live_failed": "ライブ文字起こしが停止しました：{error}"
 }

@@ -59,5 +59,11 @@
   "sources_output": "Salida: {device}",
   "sources_apps": "Apps de audio:",
   "sources_playing": ": reproduciendo audio",
-  "sources_shortcuts": "Atajos de fuente: {sources}"
+  "sources_shortcuts": "Atajos de fuente: {sources}",
+  "live_on": "transcripción en directo activada",
+  "live_off": "La transcripción en directo no está activada para esta grabación (inicia la grabación con live=true).",
+  "live_nothing_new": "Todavía no se ha dicho nada nuevo.",
+  "live_next": "Siguiente llamada: since={cursor}.",
+  "live_ended": "La grabación ha terminado.",
+  "live_failed": "La transcripción en directo se detuvo: {error}"
 }

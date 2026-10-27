@@ -59,5 +59,11 @@
   "sources_output": "Uscita: {device}",
   "sources_apps": "App audio:",
   "sources_playing": ": in riproduzione",
-  "sources_shortcuts": "Scorciatoie sorgente: {sources}"
+  "sources_shortcuts": "Scorciatoie sorgente: {sources}",
+  "live_on": "trascrizione in diretta attiva",
+  "live_off": "La trascrizione in diretta non è attiva per questa registrazione (avvia la registrazione con live=true).",
+  "live_nothing_new": "Non è ancora stato detto nulla di nuovo.",
+  "live_next": "Prossima chiamata: since={cursor}.",
+  "live_ended": "La registrazione è terminata.",
+  "live_failed": "La trascrizione in diretta si è interrotta: {error}"
 }

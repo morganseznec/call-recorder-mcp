@@ -59,5 +59,11 @@
   "sources_output": "Sortie : {device}",
   "sources_apps": "Applications audio :",
   "sources_playing": " : joue du son",
-  "sources_shortcuts": "Raccourcis de source : {sources}"
+  "sources_shortcuts": "Raccourcis de source : {sources}",
+  "live_on": "transcription en direct activée",
+  "live_off": "La transcription en direct n'est pas activée pour cet enregistrement (démarre l'enregistrement avec live=true).",
+  "live_nothing_new": "Rien de nouveau n'a été dit pour l'instant.",
+  "live_next": "Appel suivant : since={cursor}.",
+  "live_ended": "L'enregistrement est terminé.",
+  "live_failed": "La transcription en direct s'est arrêtée : {error}"
 }

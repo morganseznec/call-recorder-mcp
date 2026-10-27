@@ -19,6 +19,7 @@ REPOSITORY = "https://github.com/morganseznec/call-recorder-mcp"
 REQUIRED_TOOLS = {
     "whisper-cli": "brew install whisper-cpp",
     "whisper-vad-speech-segments": "brew install whisper-cpp",
+    "whisper-server": "brew install whisper-cpp",
     "ffmpeg": "brew install ffmpeg",
     "swiftc": "xcode-select --install",
     "codesign": "xcode-select --install",

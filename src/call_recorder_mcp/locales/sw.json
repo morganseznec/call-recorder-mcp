@@ -59,5 +59,11 @@
   "sources_output": "Towe: {device}",
   "sources_apps": "Programu za sauti:",
   "sources_playing": ": inacheza",
-  "sources_shortcuts": "Njia za mkato za vyanzo: {sources}"
+  "sources_shortcuts": "Njia za mkato za vyanzo: {sources}",
+  "live_on": "unukuzi wa moja kwa moja umewashwa",
+  "live_off": "Unukuzi wa moja kwa moja haujawashwa kwa rekodi hii (anzisha kurekodi kwa live=true).",
+  "live_nothing_new": "Bado hakuna jipya lililosemwa.",
+  "live_next": "Mwito unaofuata: since={cursor}.",
+  "live_ended": "Kurekodi kumekwisha.",
+  "live_failed": "Unukuzi wa moja kwa moja umesimama: {error}"
 }

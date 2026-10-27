@@ -16,6 +16,7 @@ EXPECTED_TOOLS = {
     "recording_status",
     "stop_recording",
     "get_transcript",
+    "get_live_transcript",
     "transcribe_recording",
     "transcribe_file",
     "rename_speakers",

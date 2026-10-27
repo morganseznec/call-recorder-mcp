@@ -59,5 +59,11 @@
   "sources_output": "Uitvoer: {device}",
   "sources_apps": "Audio-apps:",
   "sources_playing": ": speelt af",
-  "sources_shortcuts": "Korte bronnamen: {sources}"
+  "sources_shortcuts": "Korte bronnamen: {sources}",
+  "live_on": "live-transcriptie aan",
+  "live_off": "Live-transcriptie staat niet aan voor deze opname (start de opname met live=true).",
+  "live_nothing_new": "Er is nog niets nieuws gezegd.",
+  "live_next": "Volgende aanroep: since={cursor}.",
+  "live_ended": "De opname is afgelopen.",
+  "live_failed": "Live-transcriptie is gestopt: {error}"
 }

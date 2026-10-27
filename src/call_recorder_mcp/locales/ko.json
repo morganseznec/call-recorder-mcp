@@ -59,5 +59,11 @@
   "sources_output": "출력: {device}",
   "sources_apps": "오디오 앱:",
   "sources_playing": ": 재생 중",
-  "sources_shortcuts": "소스 단축 이름: {sources}"
+  "sources_shortcuts": "소스 단축 이름: {sources}",
+  "live_on": "실시간 텍스트 변환 사용 중",
+  "live_off": "이 녹음에는 실시간 텍스트 변환이 켜져 있지 않습니다(live=true로 녹음을 시작하세요).",
+  "live_nothing_new": "아직 새로 말한 내용이 없습니다.",
+  "live_next": "다음 호출: since={cursor}.",
+  "live_ended": "녹음이 끝났습니다.",
+  "live_failed": "실시간 텍스트 변환이 중지되었습니다: {error}"
 }

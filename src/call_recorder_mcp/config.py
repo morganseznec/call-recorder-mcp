@@ -29,6 +29,8 @@ APP_BINARY = APP / "Contents" / "MacOS" / "CallRecorder"
 MODELS = HOME / "models"
 WHISPER_MODEL = _path("CALL_RECORDER_WHISPER_MODEL", MODELS / "ggml-large-v3-turbo-q5_0.bin")
 VAD_MODEL = MODELS / "ggml-silero-v6.2.0.bin"
+# The same Silero VAD, in the ONNX form sherpa-onnx streams with (live transcription).
+LIVE_VAD_MODEL = MODELS / "silero_vad.onnx"
 SEGMENTATION_MODEL = MODELS / "sherpa-onnx-pyannote-segmentation-3-0" / "model.onnx"
 # CAM++ voice embeddings: 96 % right on a real WhatsApp call, where WeSpeaker got 70 %.
 EMBEDDING_MODEL = MODELS / "3dspeaker_speech_campplus_sv_zh_en_16k-common_advanced.onnx"
@@ -37,6 +39,7 @@ EMBEDDING_MODEL = MODELS / "3dspeaker_speech_campplus_sv_zh_en_16k-common_advanc
 DOWNLOADS = {
     WHISPER_MODEL: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo-q5_0.bin",
     VAD_MODEL: "https://huggingface.co/ggml-org/whisper-vad/resolve/main/ggml-silero-v6.2.0.bin",
+    LIVE_VAD_MODEL: "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/silero_vad.onnx",
     SEGMENTATION_MODEL: "https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-segmentation-models/"
     "sherpa-onnx-pyannote-segmentation-3-0.tar.bz2",
     EMBEDDING_MODEL: "https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-recongition-models/"

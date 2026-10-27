@@ -7,11 +7,13 @@ Tools are synchronous: MCP SDK v2 runs them on worker threads, so waiting for a
 capture or a transcription never blocks the server.
 """
 
+import time
 from pathlib import Path
 
 from mcp.server.mcpserver import MCPServer
 
 from . import __version__, audio, capture, config, jobs, storage, transcription
+from . import live as live_feed  # `live` is a start_recording parameter
 from .i18n import language as default_language
 from .i18n import t
 
@@ -21,8 +23,9 @@ INSTRUCTIONS = (
     "says the call is over (it returns the transcript). The transcript labels the user's microphone "
     'as "Me" ("Moi" in French) and what the apps play as the other side. For a group call, pass the '
     "number of people on the other side (speakers) to separate their voices; ask the user if you do not "
-    "know it. Then rename_speakers replaces the numbered labels with real names. Speak to the user in "
-    "their own language."
+    "know it. Then rename_speakers replaces the numbered labels with real names. To help the user during "
+    "the call (follow-up questions, vague answers), start with live=true and follow get_live_transcript. "
+    "Speak to the user in their own language."
 )
 
 mcp = MCPServer("call-recorder", version=__version__, instructions=INSTRUCTIONS)
@@ -50,7 +53,12 @@ def _transcribe(folder: Path, language: str, speakers: int, wait_seconds: float)
 
 @mcp.tool()
 def start_recording(
-    source: str = "system", title: str = "", include_mic: bool = True, language: str = "", speakers: int = 1
+    source: str = "system",
+    title: str = "",
+    include_mic: bool = True,
+    language: str = "",
+    speakers: int = 1,
+    live: bool = False,
 ) -> str:
     """Start recording a call or a conversation.
 
@@ -62,6 +70,8 @@ def start_recording(
     language: transcription language ("en", "fr", "auto"...). Defaults to the user's language.
     speakers: number of people on the other side (default 1). Above 1, their voices are
       separated in the transcript (Speaker 1, Speaker 2...).
+    live: also transcribe as the call goes, to follow it with get_live_transcript. Use it when
+      the user wants help during the call (questions to ask, answers to dig into).
     """
     if not capture.is_installed():
         return t("not_installed")
@@ -90,6 +100,9 @@ def start_recording(
         notes.append(t("mic_missing"))
     if bundles:
         notes.append(t("app_only", source=key))
+    if live:
+        live_feed.start(folder, storage.read_meta(folder)["language"])
+        notes.append(t("live_on"))
     return t("recording", name=folder.name) + (t("notes", notes="; ".join(notes)) if notes else "")
 
 
@@ -138,6 +151,51 @@ def stop_recording(transcribe: bool = True, language: str = "", speakers: int = 
     if not transcribe:
         return t("stopped_at", duration=duration, folder=folder)
     return f"{t('stopped', duration=duration)}\n\n{_transcribe(folder, language, speakers, wait_seconds)}"
+
+
+@mcp.tool()
+def get_live_transcript(since: int = 0, wait_seconds: int = 20) -> str:
+    """Live transcript of the recording in progress (started with live=true): what was said since
+    the cursor `since`, about a second after each sentence ends. Waits up to wait_seconds for new
+    speech. Rough text: the final transcript after the call is more accurate.
+
+    To follow a call and help the user in real time, call it in a loop within the same turn,
+    passing the returned cursor as `since`. After each batch, tell the user in a few lines (they
+    are on the call, keep it short): which of their planned questions got answered, where the
+    other side stayed vague, evasive or unconvincing, and one or two precise follow-up questions
+    to ask now. Say nothing when a batch brings nothing useful. Stop when the recording is over.
+    """
+    folder = capture.active()
+    if not folder:
+        try:
+            folder = storage.resolve("latest")
+        except ValueError:
+            return t("no_recording")
+    if not live_feed.status(folder):
+        return t("live_off")
+    deadline = time.monotonic() + max(0, wait_seconds)
+    while True:
+        lines = live_feed.read_lines(folder)
+        state = live_feed.status(folder)
+        finished = state.get("state") in ("ended", "error")
+        if len(lines) > since or finished or time.monotonic() >= deadline:
+            break
+        time.sleep(0.5)
+
+    new = sorted(lines[since:], key=lambda line: line["start"])
+    output = [
+        t("turn", time=storage.format_duration(line["start"]), speaker=f" {line['speaker']}", text=line["text"])
+        for line in new
+    ]
+    if not new and not finished:
+        output.append(t("live_nothing_new"))
+    if state.get("state") == "error":
+        output.append(t("live_failed", error=state.get("error", "")))
+    elif finished:
+        output.append(t("live_ended"))
+    else:
+        output.append(t("live_next", cursor=len(lines)))
+    return "\n".join(output)
 
 
 @mcp.tool()

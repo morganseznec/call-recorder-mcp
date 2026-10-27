@@ -2,13 +2,14 @@
 
 [Model Context Protocol](https://modelcontextprotocol.io/) server that records calls on macOS (WhatsApp, Teams, Zoom, Slack, FaceTime, Google Meet or any meeting in the browser) and transcribes them locally with [Whisper](https://github.com/ggml-org/whisper.cpp). Ask Claude to record, say when the call is over, and get the transcript back in the conversation, with who said what.
 
-Nothing leaves your Mac: capture, transcription and speaker separation all run locally.
+Audio never leaves your Mac: capture, transcription and speaker separation all run locally. Only the transcript text goes to Claude, when Claude reads it.
 
 ## Features
 
 - **Records both sides of a call** as two aligned tracks: your microphone and what the apps play. Uses Core Audio process taps (macOS 14.4+), so no virtual audio driver such as BlackHole is needed.
 - **Per-app capture**: record only WhatsApp, Teams or the browser, or the whole system output. The capture follows the app if it starts playing late, and survives switching to AirPods mid-call.
 - **Local transcription** with whisper.cpp (`large-v3-turbo`, Metal accelerated) and Silero voice activity detection, which keeps Whisper from inventing text during silences. About 75 s for 18 minutes of call on an M-series Mac.
+- **Live help during a call**: Claude follows the conversation about a second behind and, as it goes, tells you which of your questions got answered, where the other side stayed vague, and what to ask next.
 - **Who said what**: "Me" (your mic) and "Other side" (what the apps play). Without headphones your mic also hears the other side; those echoes are removed.
 - **Several people on the other side**: give their number and their voices are separated (Speaker 1, 2...), then renamed to real names in one call.
 - **Custom vocabulary** so product, company and people names are spelled right.
@@ -88,11 +89,24 @@ A transcript looks like this:
 **[00:00:06] Me**: On my side the iOS build is ready, it's in TestFlight.
 ```
 
+## Live help during a call
+
+Give Claude the context of the call and the questions you want to ask, then start a live recording:
+
+> I'm calling a supplier about the v2 delivery. I want to know the delivery date, the budget and who validates the release. Record the WhatsApp call live and help me dig in when the answers are vague.
+
+Claude starts the recording with `live=true`, then follows the call with `get_live_transcript` in a loop, in the same reply. After each exchange it tells you, in a few lines, which questions are covered, which answers stayed vague or evasive, and one or two follow-up questions to ask now. It stops when you stop the recording.
+
+- Each sentence reaches Claude about **1 second after it ends**: a `whisper-server` keeps the model in memory and a streaming voice detector (Silero, through sherpa-onnx) cuts each side into sentences as they come.
+- The live text is a draft: no speaker separation, less context per sentence. The final transcript, made when the call ends, is unchanged.
+- In live mode the transcript goes to Claude continuously during the call.
+
 ## How it works
 
 ```
 Claude ──MCP──> call-recorder-mcp ──open──> CallRecorder.app ──> mic.wav + remote.wav
                        │
+                       ├──> live job (optional): streaming VAD ──> whisper-server ──> live.jsonl
                        └──> background job: VAD or diarization ──> whisper.cpp ──> transcript.md
 ```
 
@@ -150,7 +164,8 @@ Recordings stop automatically after 4 hours.
 
 | Tool | Purpose |
 |---|---|
-| `start_recording(source, title, include_mic, language, speakers)` | Start recording. `source`: `system` (default), `whatsapp`, `teams`, `zoom`, `slack`, `facetime`, `browser`, `chrome`, `safari`, `firefox`, `arc`, `edge`, or a bundle ID prefix |
+| `start_recording(source, title, include_mic, language, speakers, live)` | Start recording. `source`: `system` (default), `whatsapp`, `teams`, `zoom`, `slack`, `facetime`, `browser`, `chrome`, `safari`, `firefox`, `arc`, `edge`, or a bundle ID prefix. `live=true` also transcribes as the call goes |
+| `get_live_transcript(since, wait_seconds)` | What was said since the cursor `since`, waiting up to `wait_seconds` for new speech; returns the next cursor |
 | `recording_status()` | Elapsed time, captured apps, live levels (-120 dB on a side means nothing is captured) |
 | `stop_recording(transcribe, language, speakers, wait_seconds)` | Stop, mix `conversation.wav`, start the transcription and return it when ready |
 | `get_transcript(recording, wait_seconds)` | Transcript of a recording (`latest` or folder name), waiting if still running |
@@ -162,7 +177,7 @@ Recordings stop automatically after 4 hours.
 
 ## Privacy and consent
 
-Recording a conversation without the other people's consent is illegal in many countries (in France, article 226-1 of the Code pénal). Tell the people you are recording. Audio and transcripts stay on your Mac, in the folder above.
+Recording a conversation without the other people's consent is illegal in many countries (in France, article 226-1 of the Code pénal). Tell the people you are recording. Audio and transcripts are stored on your Mac, in the folder above; the transcript text is sent to Claude when it reads it, continuously in live mode.
 
 ## Development
 

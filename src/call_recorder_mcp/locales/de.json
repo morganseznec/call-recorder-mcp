@@ -59,5 +59,11 @@
   "sources_output": "Ausgabe: {device}",
   "sources_apps": "Audio-Apps:",
   "sources_playing": ": spielt Ton ab",
-  "sources_shortcuts": "Quellen-Kürzel: {sources}"
+  "sources_shortcuts": "Quellen-Kürzel: {sources}",
+  "live_on": "Live-Transkription aktiv",
+  "live_off": "Die Live-Transkription ist für diese Aufnahme nicht aktiv (starte die Aufnahme mit live=true).",
+  "live_nothing_new": "Bisher wurde nichts Neues gesagt.",
+  "live_next": "Nächster Aufruf: since={cursor}.",
+  "live_ended": "Die Aufnahme ist beendet.",
+  "live_failed": "Die Live-Transkription wurde gestoppt: {error}"
 }

@@ -59,5 +59,11 @@
   "sources_output": "輸出：{device}",
   "sources_apps": "音訊 App：",
   "sources_playing": "：正在播放",
-  "sources_shortcuts": "來源簡稱：{sources}"
+  "sources_shortcuts": "來源簡稱：{sources}",
+  "live_on": "即時轉錄已開啟",
+  "live_off": "此錄音未開啟即時轉錄（請使用 live=true 開始錄音）。",
+  "live_nothing_new": "目前還沒有新的內容。",
+  "live_next": "下次呼叫：since={cursor}。",
+  "live_ended": "錄音已結束。",
+  "live_failed": "即時轉錄已停止：{error}"
 }
