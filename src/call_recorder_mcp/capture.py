@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from . import audio, config, storage
+from .i18n import t
 
 BROWSERS = [
     "com.google.Chrome",
@@ -68,7 +69,7 @@ def resolve_source(source: str) -> tuple[str, list[str]]:
         return key, SOURCES[key]
     if "." in key:
         return key, [source.strip()]
-    raise ValueError(f"Source inconnue : {source}. Valeurs : {', '.join(SOURCES)} ou un bundle ID.")
+    raise ValueError(t("unknown_source", source=source, values=", ".join(SOURCES)))
 
 
 def process_alive(pid: int | None) -> bool:

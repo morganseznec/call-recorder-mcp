@@ -64,8 +64,12 @@ def build_app(identity: str) -> None:
     shutil.rmtree(staging, ignore_errors=True)
     binary = staging / "Contents" / "MacOS" / "CallRecorder"
     binary.parent.mkdir(parents=True)
-    with resources.as_file(sources / "main.swift") as swift, resources.as_file(sources / "Info.plist") as plist:
-        shutil.copy(plist, staging / "Contents" / "Info.plist")
+    with resources.as_file(sources) as source_dir:
+        swift = source_dir / "main.swift"
+        shutil.copy(source_dir / "Info.plist", staging / "Contents" / "Info.plist")
+        # Translations of the permission prompts (English is in Info.plist).
+        for strings in source_dir.glob("*.lproj"):
+            shutil.copytree(strings, staging / "Contents" / "Resources" / strings.name)
         # Compiler output (warnings included) is only shown if the build fails.
         subprocess.run(
             ["swiftc", "-O", "-swift-version", "5", "-o", str(binary), str(swift)],

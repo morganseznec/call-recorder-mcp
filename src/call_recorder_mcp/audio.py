@@ -6,6 +6,8 @@ import wave
 from collections.abc import Iterable
 from pathlib import Path
 
+from .i18n import t
+
 SAMPLE_RATE = 16_000  # what Whisper and the diarization models expect
 
 
@@ -23,7 +25,7 @@ def import_file(source: Path, destination: Path) -> None:
     """Any audio or video file (opus, m4a, mp4...) -> mono 48 kHz WAV."""
     result = _ffmpeg("-i", str(source), "-vn", "-ac", "1", "-ar", "48000", str(destination))
     if result.returncode != 0:
-        raise ValueError(f"Impossible de lire ce fichier : {result.stderr.strip()[-500:]}")
+        raise ValueError(t("unreadable_file", error=result.stderr.strip()[-500:]))
 
 
 def mix(tracks: list[Path], destination: Path) -> None:

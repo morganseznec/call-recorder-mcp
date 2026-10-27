@@ -17,7 +17,10 @@ HOME = _path("CALL_RECORDER_HOME", "~/Library/Application Support/call-recorder-
 # One folder per recording.
 RECORDINGS = _path("CALL_RECORDER_DIR", "~/CallRecordings")
 VOCABULARY = _path("CALL_RECORDER_VOCABULARY", HOME / "vocabulary.txt")
-LANGUAGE = os.environ.get("CALL_RECORDER_LANGUAGE") or "fr"
+# Interface language ("en" or "fr"); empty = the macOS language. See i18n.py.
+LOCALE = os.environ.get("CALL_RECORDER_LOCALE", "")
+# Transcription language ("fr", "en", "auto"...); empty = the interface language.
+LANGUAGE = os.environ.get("CALL_RECORDER_LANGUAGE", "")
 SIGN_IDENTITY = os.environ.get("CALL_RECORDER_SIGN_IDENTITY", "")
 
 APP = HOME / "CallRecorder.app"

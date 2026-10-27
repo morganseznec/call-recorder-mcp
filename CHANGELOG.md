@@ -4,6 +4,22 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-10-27
+
+English and French, instead of French only.
+
+### Added
+
+- **English interface.** Tool replies, transcript headings and speaker labels ("Me", "Other side", "Speaker 1"...) now exist in English and French. The language follows the Mac's language (`AppleLocale`), and `CALL_RECORDER_LOCALE` (`en` or `fr`) overrides it; other languages fall back to English.
+- **Localized permission prompts.** The macOS microphone and audio recording prompts for CallRecorder are in English, and in French through `fr.lproj` on a French Mac. Run `call-recorder-setup` again to rebuild the helper.
+
+### Changed
+
+- **The default transcription language follows the interface language** (it was always French). `CALL_RECORDER_LANGUAGE` still overrides it.
+- Tool descriptions and server instructions are in English; Claude is told to answer in the user's language.
+- An imported file transcribed with `speakers=1` has no speaker label.
+- The Whisper hallucination filter also covers common English subtitle credits ("Thanks for watching").
+
 ## [1.0.0] - 2026-10-27
 
 First public release.
@@ -23,4 +39,5 @@ First public release.
 - Filters for common Whisper hallucinations on silence and noise (subtitle credits).
 - Test suite (unit tests and a JSON-RPC stdio roundtrip) and CI.
 
+[1.1.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.1.0
 [1.0.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.0.0

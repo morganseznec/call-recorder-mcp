@@ -33,7 +33,7 @@ def test_real_speech_is_kept(text):
 def test_vocabulary_prompt_skips_comments_and_blank_lines(tmp_path):
     vocabulary = tmp_path / "vocabulary.txt"
     vocabulary.write_text("# comment\n\niOS\n  TestFlight  \n")
-    assert transcription.vocabulary_prompt(vocabulary) == "Vocabulaire : iOS, TestFlight."
+    assert transcription.vocabulary_prompt(vocabulary) == "Vocabulaire: iOS, TestFlight."
 
 
 def test_no_vocabulary_means_no_prompt():

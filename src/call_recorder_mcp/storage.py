@@ -1,8 +1,8 @@
 """Recording folders: one folder per recording, small JSON files for state.
 
 A folder holds:
-  mic.wav           your microphone ("Moi")
-  remote.wav        what the apps play ("Interlocuteur")
+  mic.wav           your microphone
+  remote.wav        what the apps play (the other side)
   audio.wav         an imported file (instead of mic/remote)
   conversation.wav  both sides mixed, to listen to
   capture.json      capture state, written by CallRecorder.app
@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from . import config
+from .i18n import t
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -80,11 +81,11 @@ def resolve(reference: str) -> Path:
     if reference in ("", "latest"):
         folders = recent(1)
         if not folders:
-            raise ValueError(f"Aucun enregistrement dans {config.RECORDINGS}.")
+            raise ValueError(t("no_recordings", folder=config.RECORDINGS))
         return folders[0]
     path = Path(reference).expanduser()
     if not path.is_absolute():
         path = config.RECORDINGS / reference
     if not path.is_dir():
-        raise ValueError(f"Enregistrement introuvable : {reference}.")
+        raise ValueError(t("recording_not_found", reference=reference))
     return path

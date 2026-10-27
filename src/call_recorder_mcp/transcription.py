@@ -18,16 +18,18 @@ from pathlib import Path
 from typing import Any, TypedDict
 
 from . import audio, config, diarization, storage
+from .i18n import language as language_default
+from .i18n import t
 from .spans import Span, group_utterances
 
-# Track file -> speaker label. "audio" (an imported file) has no fixed speaker.
-TRACKS = {"mic": "Moi", "remote": "Interlocuteur", "audio": ""}
+# Recorded tracks; "audio" is an imported file.
+TRACKS = ("mic", "remote", "audio")
 SILENT_TRACK_DB = -55.0
 
 # Whisper "hears" these on silence or noise (subtitle credits mostly), or echoes its prompt.
 HALLUCINATIONS = re.compile(
     r"amara\.org|sous-titr|merci d'avoir regard|abonnez-vous|^\W*(merci|thank you)\W*$|"
-    r"radio-canada|transcrit par|^\W*vocabulaire\s*:|"
+    r"radio-canada|transcrit par|thanks? (you )?for watching|subtitles by|^\W*(vocabulaire|glossary)\s*:|"
     r"^\W*\[?(musique|music|rires|silence|applaudissements)\]?\W*$",
     re.IGNORECASE,
 )
@@ -47,7 +49,7 @@ def vocabulary_prompt(path: Path | None = None) -> str:
     except OSError:
         return ""
     terms = [line.strip() for line in lines if line.strip() and not line.lstrip().startswith("#")]
-    return f"Vocabulaire : {', '.join(terms)}." if terms else ""
+    return f"{t('glossary')}: {', '.join(terms)}." if terms else ""
 
 
 def vad_spans(pcm: Path) -> list[Span]:
@@ -116,15 +118,17 @@ def transcribe_track(wav: Path, language: str, workdir: Path, speakers: int = 1)
 
 
 def label(track: str, segments: list[tuple[Span, str]], speakers: int) -> list[Segment]:
-    """Speaker labels: "Moi", "Interlocuteur", or "Interlocuteur 1, 2..." (numbered by first appearance)."""
-    base = TRACKS[track]
+    """Speaker labels ("Me", "Other side", "Speaker 1"... in English), numbered by first appearance."""
     numbers: dict[int, int] = {}
     labelled = []
     for span, text in sorted(segments, key=lambda item: item[0].start):
-        speaker = base
-        if speakers > 1 and track != "mic":
+        if track == "mic":
+            speaker = t("me")
+        elif speakers > 1:
             number = numbers.setdefault(span.voice, len(numbers) + 1)
-            speaker = f"{base or 'Personne'} {number}"
+            speaker = t("remote_n" if track == "remote" else "person_n", n=number)
+        else:
+            speaker = t("remote") if track == "remote" else ""
         labelled.append(Segment(start=span.start, end=span.end, text=text, speaker=speaker))
     return labelled
 
@@ -159,24 +163,28 @@ def merge_turns(segments: list[Segment], max_pause: float = 3.0) -> list[Segment
 def render(folder: Path, turns: list[Segment], language: str) -> None:
     """Writes transcript.md (for people) and transcript.json (the turns)."""
     meta = storage.read_meta(folder)
+
+    def field(key: str, value: str) -> str:
+        return t("field", label=t(key), value=value)
+
     lines = [f"# {meta.get('title') or folder.name}", ""]
     if meta.get("started_at"):
-        lines.append(f"- Date : {meta['started_at'].replace('T', ' ')}")
+        lines.append(field("date", meta["started_at"].replace("T", " ")))
     if meta.get("source"):
-        lines.append(f"- Source : {meta['source']}")
+        lines.append(field("source", meta["source"]))
     duration = storage.read_json(folder / "capture.json").get("duration_seconds")
     if duration:
-        lines.append(f"- Durée : {storage.format_duration(duration)}")
+        lines.append(field("duration", storage.format_duration(duration)))
     participants = sorted({turn["speaker"] for turn in turns if turn["speaker"]})
     if len(participants) > 1:
-        lines.append(f"- Participants : {', '.join(participants)}")
-    lines += [f"- Langue : {language}", "", "## Transcription", ""]
+        lines.append(field("participants", ", ".join(participants)))
+    lines += [field("language", language), "", f"## {t('transcript')}", ""]
 
     if not turns:
-        lines.append("_Aucune parole détectée._")
+        lines.append(t("no_speech"))
     for turn in turns:
         speaker = f" {turn['speaker']}" if turn["speaker"] else ""
-        lines += [f"**[{storage.format_duration(turn['start'])}]{speaker}** : {turn['text']}", ""]
+        lines += [t("turn", time=storage.format_duration(turn["start"]), speaker=speaker, text=turn["text"]), ""]
 
     (folder / "transcript.md").write_text("\n".join(lines).rstrip() + "\n")
     storage.write_json(folder / "transcript.json", {"language": language, "turns": turns})
@@ -184,7 +192,7 @@ def render(folder: Path, turns: list[Segment], language: str) -> None:
 
 def transcribe(folder: Path, language: str) -> None:
     """Transcribes every non-silent track of a recording folder."""
-    # People on the other side (or in an imported file); "Moi" is always one person.
+    # People on the other side (or in an imported file); the mic is always one person.
     speakers = max(1, int(storage.read_meta(folder).get("speakers") or 1))
     tracks: dict[str, list[Segment]] = {}
     for track in TRACKS:
@@ -198,14 +206,14 @@ def transcribe(folder: Path, language: str) -> None:
 
 
 def rename_speakers(folder: Path, names: dict[str, str]) -> None:
-    """Replaces speaker labels, e.g. {"Interlocuteur 1": "Alice"} (ValueError for unknown labels)."""
+    """Replaces speaker labels, e.g. {"Speaker 1": "Alice"} (ValueError for unknown labels)."""
     data = storage.read_json(folder / "transcript.json")
     turns: list[Segment] = data.get("turns", [])
     if not turns:
-        raise ValueError("Pas de transcription pour cet enregistrement.")
+        raise ValueError(t("no_transcript"))
     known = {turn["speaker"] for turn in turns}
     unknown = [name for name in names if name not in known]
     if unknown:
-        raise ValueError(f"Participants inconnus : {', '.join(unknown)}. Participants : {', '.join(sorted(known))}.")
+        raise ValueError(t("unknown_speakers", unknown=", ".join(unknown), known=", ".join(sorted(known))))
     renamed = [Segment(**{**turn, "speaker": names.get(turn["speaker"], turn["speaker"])}) for turn in turns]
-    render(folder, merge_turns(renamed), data.get("language", config.LANGUAGE))
+    render(folder, merge_turns(renamed), data.get("language") or language_default())

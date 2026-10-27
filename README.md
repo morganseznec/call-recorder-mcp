@@ -9,13 +9,12 @@ Nothing leaves your Mac: capture, transcription and speaker separation all run l
 - **Records both sides of a call** as two aligned tracks: your microphone and what the apps play. Uses Core Audio process taps (macOS 14.4+), so no virtual audio driver such as BlackHole is needed.
 - **Per-app capture**: record only WhatsApp, Teams or the browser, or the whole system output. The capture follows the app if it starts playing late, and survives switching to AirPods mid-call.
 - **Local transcription** with whisper.cpp (`large-v3-turbo`, Metal accelerated) and Silero voice activity detection, which keeps Whisper from inventing text during silences. About 75 s for 18 minutes of call on an M-series Mac.
-- **Who said what**: "Moi" (your mic) and "Interlocuteur" (the other side). Without headphones your mic also hears the other side; those echoes are removed.
-- **Several people on the other side**: give their number and their voices are separated (Interlocuteur 1, 2...), then renamed to real names in one call.
+- **Who said what**: "Me" (your mic) and "Other side" (what the apps play). Without headphones your mic also hears the other side; those echoes are removed.
+- **Several people on the other side**: give their number and their voices are separated (Speaker 1, 2...), then renamed to real names in one call.
 - **Custom vocabulary** so product, company and people names are spelled right.
 - **Works with existing files** too: WhatsApp voice notes, meeting recordings, any audio or video format ffmpeg reads.
 - A **mixed `conversation.wav`** of each call, to listen to.
-
-Tool replies are in French (the server was built for French-speaking calls); transcription works in any language Whisper supports.
+- **English and French**: tool replies, transcript labels ("Me" / "Moi", "Speaker 1" / "Interlocuteur 1"...) and the macOS permission prompts follow your Mac's language, and transcription defaults to it. Set `CALL_RECORDER_LOCALE` to choose. Transcription itself works in any language Whisper supports.
 
 ## Requirements
 
@@ -61,30 +60,32 @@ You never call the tools yourself: talk to Claude and it picks them.
 
 | What you say | What happens |
 |---|---|
-| "Enregistre mon appel WhatsApp" | `start_recording(source="whatsapp")` |
-| "C'est fini, transcris" | `stop_recording()` returns the transcript |
-| "Enregistre la réunion Teams, ils sont 4 en face" | `start_recording(source="teams", speakers=4)` |
-| "Le 1 c'est Alice, le 2 c'est Bob" | `rename_speakers({"Interlocuteur 1": "Alice", ...})` |
-| "Transcris cette note vocale ~/Downloads/note.opus" | `transcribe_file(path=...)` |
-| "Retranscris le dernier appel en anglais" | `transcribe_recording(language="en")` |
-| "Est-ce que ça enregistre bien ?" | `recording_status()` shows live levels for both sides |
+| "Record my WhatsApp call" | `start_recording(source="whatsapp")` |
+| "The call is over, transcribe it" | `stop_recording()` returns the transcript |
+| "Record the Teams meeting, there are 4 people on the other side" | `start_recording(source="teams", speakers=4)` |
+| "Speaker 1 is Alice, speaker 2 is Bob" | `rename_speakers({"Speaker 1": "Alice", "Speaker 2": "Bob"})` |
+| "Transcribe this voice note ~/Downloads/note.opus" | `transcribe_file(path=...)` |
+| "Transcribe the last call again, in Spanish" | `transcribe_recording(language="es")` |
+| "Is it recording properly?" | `recording_status()` shows live levels for both sides |
+
+It works the same in French ("Enregistre mon appel WhatsApp", "C'est fini, transcris").
 
 A transcript looks like this:
 
 ```markdown
-# Point produit
+# Product sync
 
-- Date : 2026-10-27 12:10:37
-- Source : teams
-- Durée : 00:18:44
-- Participants : Alice, Interlocuteur 2, Moi
-- Langue : fr
+- Date: 2026-10-27 12:10:37
+- Source: teams
+- Duration: 00:18:44
+- Participants: Alice, Me, Speaker 2
+- Language: en
 
-## Transcription
+## Transcript
 
-**[00:00:02] Alice** : Bonjour à tous, on fait le point sur la version 2.
+**[00:00:02] Alice**: Hi everyone, let's go over version 2.
 
-**[00:00:06] Moi** : De mon côté la version iOS est prête, elle est dans TestFlight.
+**[00:00:06] Me**: On my side the iOS build is ready, it's in TestFlight.
 ```
 
 ## How it works
@@ -127,7 +128,8 @@ All optional, set with `-e NAME=value` in `claude mcp add`:
 | Variable | Default | Purpose |
 |---|---|---|
 | `CALL_RECORDER_DIR` | `~/CallRecordings` | Where recordings and transcripts go |
-| `CALL_RECORDER_LANGUAGE` | `fr` | Default transcription language (`en`, `auto`...) |
+| `CALL_RECORDER_LOCALE` | your Mac's language | Language of replies and transcript labels: `en` or `fr` (others fall back to English) |
+| `CALL_RECORDER_LANGUAGE` | same as the locale | Default transcription language (`en`, `fr`, `auto`...) |
 | `CALL_RECORDER_VOCABULARY` | `<home>/vocabulary.txt` | Vocabulary file |
 | `CALL_RECORDER_HOME` | `~/Library/Application Support/call-recorder-mcp` | Helper app, models, vocabulary |
 | `CALL_RECORDER_WHISPER_MODEL` | `<home>/models/ggml-large-v3-turbo-q5_0.bin` | Any whisper.cpp model |
@@ -154,7 +156,7 @@ Recordings stop automatically after 4 hours.
 | `get_transcript(recording, wait_seconds)` | Transcript of a recording (`latest` or folder name), waiting if still running |
 | `transcribe_recording(recording, language, speakers, wait_seconds)` | Transcribe again, e.g. in another language or to separate voices |
 | `transcribe_file(path, title, language, speakers, wait_seconds)` | Transcribe an existing audio or video file |
-| `rename_speakers(names, recording)` | Replace "Interlocuteur 1"... with real names |
+| `rename_speakers(names, recording)` | Replace "Speaker 1"... with real names |
 | `list_recordings(limit)` | Latest recordings and their transcription state |
 | `list_audio_sources()` | Apps currently using audio, default microphone and output |
 

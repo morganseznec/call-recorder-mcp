@@ -1,0 +1,3 @@
+/* Permission prompts shown by macOS, in French. */
+"NSMicrophoneUsageDescription" = "CallRecorder enregistre votre voix pendant un appel pour le transcrire.";
+"NSAudioCaptureUsageDescription" = "CallRecorder enregistre le son de l'appel (WhatsApp, Teams, navigateur) pour le transcrire.";
