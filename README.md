@@ -1,5 +1,7 @@
 # Call Recorder MCP
 
+[![M8ven Score](https://m8ven.ai/badge/mcp/morganseznec-call-recorder-mcp-bq9h5t?v=3277120657296e3e03a3f6642a0ca784)](https://m8ven.ai/mcp/morganseznec-call-recorder-mcp-bq9h5t?s=readme)
+
 [Model Context Protocol](https://modelcontextprotocol.io/) server that records calls on macOS (WhatsApp, Teams, Zoom, Slack, FaceTime, Google Meet or any meeting in the browser) and transcribes them locally with [Whisper](https://github.com/ggml-org/whisper.cpp). Ask Claude to record, say when the call is over, and get the transcript back in the conversation, with who said what.
 
 Audio never leaves your Mac: capture, transcription and speaker separation all run locally. Only the transcript text goes to Claude, when Claude reads it.
