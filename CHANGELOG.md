@@ -4,6 +4,12 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-10-31
+
+### Added
+
+- **Tool annotations.** Every tool declares the four MCP hints explicitly (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`), so clients can warn before an action with consequences. Read-only: `recording_status`, `get_transcript`, `get_live_transcript`, `list_recordings`, `list_audio_sources`. Destructive: `transcribe_recording` (replaces the transcript, including renamed speakers) and `rename_speakers`. Not idempotent: `start_recording` and `transcribe_file`. No tool reaches the open world: everything stays on the Mac. Reported by the M8ven quality check.
+
 ## [1.3.0] - 2026-10-27
 
 Live transcription, so Claude can help during the call.
@@ -71,6 +77,7 @@ First public release.
 - Filters for common Whisper hallucinations on silence and noise (subtitle credits).
 - Test suite (unit tests and a JSON-RPC stdio roundtrip) and CI.
 
+[1.3.1]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.3.1
 [1.3.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.3.0
 [1.2.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.2.0
 [1.1.0]: https://github.com/morganseznec/call-recorder-mcp/releases/tag/v1.1.0

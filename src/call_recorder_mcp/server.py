@@ -11,6 +11,7 @@ import time
 from pathlib import Path
 
 from mcp.server.mcpserver import MCPServer
+from mcp.types import ToolAnnotations
 
 from . import __version__, audio, capture, config, jobs, storage, transcription
 from . import live as live_feed  # `live` is a start_recording parameter
@@ -29,6 +30,19 @@ INSTRUCTIONS = (
 )
 
 mcp = MCPServer("call-recorder", version=__version__, instructions=INSTRUCTIONS)
+
+
+def hints(*, read_only: bool, destructive: bool = False, idempotent: bool = True) -> ToolAnnotations:
+    """All four MCP hints, always explicit (some tool directories reject a missing one).
+
+    openWorldHint is always false: capture, files and transcription stay on this Mac.
+    """
+    return ToolAnnotations(
+        read_only_hint=read_only, destructive_hint=destructive, idempotent_hint=idempotent, open_world_hint=False
+    )
+
+
+READ_ONLY = hints(read_only=True)
 
 
 def _transcript(folder: Path, wait_seconds: float) -> str:
@@ -51,7 +65,7 @@ def _transcribe(folder: Path, language: str, speakers: int, wait_seconds: float)
     return _transcript(folder, wait_seconds)
 
 
-@mcp.tool()
+@mcp.tool(annotations=hints(read_only=False, idempotent=False))
 def start_recording(
     source: str = "system",
     title: str = "",
@@ -106,7 +120,7 @@ def start_recording(
     return t("recording", name=folder.name) + (t("notes", notes="; ".join(notes)) if notes else "")
 
 
-@mcp.tool()
+@mcp.tool(annotations=READ_ONLY)
 def recording_status() -> str:
     """Whether a recording is in progress, for how long, and the recent sound levels of each side
     (-120 dB on the other side means no sound is being captured)."""
@@ -131,7 +145,7 @@ def recording_status() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(annotations=hints(read_only=False))
 def stop_recording(transcribe: bool = True, language: str = "", speakers: int = 0, wait_seconds: int = 30) -> str:
     """Stop the recording in progress and start its transcription.
 
@@ -153,7 +167,7 @@ def stop_recording(transcribe: bool = True, language: str = "", speakers: int = 
     return f"{t('stopped', duration=duration)}\n\n{_transcribe(folder, language, speakers, wait_seconds)}"
 
 
-@mcp.tool()
+@mcp.tool(annotations=READ_ONLY)
 def get_live_transcript(since: int = 0, wait_seconds: int = 20) -> str:
     """Live transcript of the recording in progress (started with live=true): what was said since
     the cursor `since`, about a second after each sentence ends. Waits up to wait_seconds for new
@@ -198,7 +212,7 @@ def get_live_transcript(since: int = 0, wait_seconds: int = 20) -> str:
     return "\n".join(output)
 
 
-@mcp.tool()
+@mcp.tool(annotations=READ_ONLY)
 def get_transcript(recording: str = "latest", wait_seconds: int = 30) -> str:
     """Transcript of a recording ("latest" or the folder name), waiting up to wait_seconds
     if it is still running."""
@@ -211,7 +225,7 @@ def get_transcript(recording: str = "latest", wait_seconds: int = 30) -> str:
     return _transcript(folder, wait_seconds)
 
 
-@mcp.tool()
+@mcp.tool(annotations=hints(read_only=False, destructive=True))
 def transcribe_recording(
     recording: str = "latest", language: str = "", speakers: int = 0, wait_seconds: int = 30
 ) -> str:
@@ -226,7 +240,7 @@ def transcribe_recording(
     return _transcribe(folder, language, speakers, wait_seconds)
 
 
-@mcp.tool()
+@mcp.tool(annotations=hints(read_only=False, idempotent=False))
 def transcribe_file(path: str, title: str = "", language: str = "", speakers: int = 1, wait_seconds: int = 30) -> str:
     """Transcribe an existing audio or video file (WhatsApp voice note .opus, .m4a, .mp3, .mp4,
     meeting recording...), copied into a new recording folder.
@@ -251,7 +265,7 @@ def transcribe_file(path: str, title: str = "", language: str = "", speakers: in
     return _transcribe(folder, language, 0, wait_seconds)
 
 
-@mcp.tool()
+@mcp.tool(annotations=hints(read_only=False, destructive=True))
 def rename_speakers(names: dict[str, str], recording: str = "latest") -> str:
     """Replace speaker labels in a transcript with real names, e.g. {"Speaker 1": "Alice"}
     (labels are in the user's language, as shown in the transcript). Returns the updated transcript."""
@@ -263,7 +277,7 @@ def rename_speakers(names: dict[str, str], recording: str = "latest") -> str:
     return _transcript(folder, 0)
 
 
-@mcp.tool()
+@mcp.tool(annotations=READ_ONLY)
 def list_recordings(limit: int = 10) -> str:
     """Latest recordings and their transcription state."""
     folders = storage.recent(limit)
@@ -281,7 +295,7 @@ def list_recordings(limit: int = 10) -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(annotations=READ_ONLY)
 def list_audio_sources() -> str:
     """Apps currently using audio (to choose the source), and the default microphone and output."""
     if not capture.is_installed():

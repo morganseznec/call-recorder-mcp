@@ -73,3 +73,12 @@ def test_initialize_and_list_tools(tmp_path):
     tools = {tool["name"]: tool for tool in responses[2]["result"]["tools"]}
     assert set(tools) == EXPECTED_TOOLS
     assert "speakers" in tools["start_recording"]["inputSchema"]["properties"]
+
+    # All four hints on every tool, as booleans (directories reject tools missing one).
+    for name, tool in tools.items():
+        annotations = tool.get("annotations", {})
+        for hint in ("readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint"):
+            assert isinstance(annotations.get(hint), bool), (name, hint)
+    assert tools["list_recordings"]["annotations"]["readOnlyHint"] is True
+    assert tools["rename_speakers"]["annotations"]["destructiveHint"] is True
+    assert tools["start_recording"]["annotations"]["idempotentHint"] is False
